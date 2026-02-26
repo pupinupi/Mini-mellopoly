@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Mellopoly</title>
-<link rel="stylesheet" href="style.css">
+  <title>Mellopoly</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<h1>Mini Mellopoly</h1>
+
 <div id="join">
-    <input id="name" placeholder="Имя">
-    <input id="room" placeholder="Код комнаты">
-    <button onclick="join()">Войти</button>
+  <input id="name" placeholder="Имя">
+  <input id="room" placeholder="Комната">
+  <button onclick="join()">Войти</button>
 </div>
 
-<div id="game" style="display:none">
-    <button onclick="start()">Начать игру</button>
-    <button onclick="roll()">Бросить кубик</button>
-    <div id="board"></div>
+<div id="game" style="display:none;">
+  <button onclick="start()">Начать игру</button>
+  <button onclick="roll()">Бросить кубик</button>
+  <div id="board"></div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
