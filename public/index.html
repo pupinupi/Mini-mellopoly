@@ -1,54 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+  <meta charset="UTF-8">
   <title>Mini Monopoly</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Mini Monopoly</h1>
 
   <div id="join">
-    <input id="name" placeholder="Ваше имя" />
-    <button onclick="join()">Войти</button>
+    <input id="name" placeholder="Ваше имя">
+    <input id="roomCode" placeholder="Код комнаты">
+    <select id="color">
+      <option value="red">Красный</option>
+      <option value="blue">Синий</option>
+      <option value="green">Зелёный</option>
+      <option value="yellow">Жёлтый</option>
+    </select>
+    <button onclick="joinRoom()">Войти</button>
   </div>
 
   <div id="game" style="display:none;">
-    <button onclick="start()">Начать игру</button>
-    <button onclick="roll()">Бросить кубик</button>
-    <button onclick="buy()">Купить клетку</button>
-    <pre id="state"></pre>
+    <button onclick="startGame()">Начать игру</button>
+    <button onclick="rollDice()">Бросить кубик</button>
   </div>
 
+  <div id="board"></div>
+
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-
-    function join() {
-      const name = document.getElementById("name").value;
-      socket.emit("joinGame", name);
-      document.getElementById("join").style.display = "none";
-      document.getElementById("game").style.display = "block";
-    }
-
-    function start() {
-      socket.emit("startGame");
-    }
-
-    function roll() {
-      socket.emit("rollDice");
-    }
-
-    function buy() {
-      socket.emit("buyProperty");
-    }
-
-    socket.on("updateGame", (data) => {
-      document.getElementById("state").innerText =
-        JSON.stringify(data, null, 2);
-    });
-
-    socket.on("diceRolled", (data) => {
-      alert(data.player + " выбросил " + data.dice);
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
