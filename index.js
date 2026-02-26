@@ -8,91 +8,105 @@ const io = new Server(server);
 
 app.use(express.static("public"));
 
-const BOARD_SIZE = 20;
-const START_MONEY = 1000;
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
+});
 
-let game = {
-  players: [],
-  currentTurn: 0,
-  started: false,
-  properties: Array(BOARD_SIZE).fill(null)
-};
-
-function createPlayer(id, name) {
-  return {
-    id,
-    name,
-    position: 0,
-    money: START_MONEY,
-    properties: []
-  };
-}
-
-function rollDice() {
-  return Math.floor(Math.random() * 6) + 1;
-}
-
-function nextTurn() {
-  if (game.players.length === 0) return;
-  game.currentTurn = (game.currentTurn + 1) % game.players.length;
-}
+const rooms = {};
+const MAX_PLAYERS = 4;
 
 io.on("connection", (socket) => {
 
-  socket.on("joinGame", (name) => {
-    if (game.started) return;
-    const player = createPlayer(socket.id, name);
-    game.players.push(player);
-    io.emit("updateGame", game);
-  });
+    socket.on("joinRoom", ({ name, roomCode }) => {
 
-  socket.on("startGame", () => {
-    if (game.players.length >= 2) {
-      game.started = true;
-      io.emit("updateGame", game);
-    }
-  });
+        if (!rooms[roomCode]) {
+            rooms[roomCode] = {
+                players: [],
+                host: socket.id,
+                started: false,
+                turn: 0
+            };
+        }
 
-  socket.on("rollDice", () => {
-    if (!game.started) return;
+        const room = rooms[roomCode];
 
-    const player = game.players[game.currentTurn];
-    if (!player || player.id !== socket.id) return;
+        if (room.players.length >= MAX_PLAYERS) {
+            socket.emit("roomFull");
+            return;
+        }
 
-    const dice = rollDice();
-    player.position = (player.position + dice) % BOARD_SIZE;
+        const player = {
+            id: socket.id,
+            name,
+            position: 0,
+            money: 20000,
+            jail: false,
+            skip: 0
+        };
 
-    const owner = game.properties[player.position];
+        room.players.push(player);
+        socket.join(roomCode);
 
-    if (owner && owner !== player.id) {
-      const rent = 100;
-      player.money -= rent;
-      const ownerPlayer = game.players.find(p => p.id === owner);
-      if (ownerPlayer) ownerPlayer.money += rent;
-    }
+        io.to(roomCode).emit("roomUpdate", room);
+    });
 
-    io.emit("diceRolled", { player: player.name, dice });
-    io.emit("updateGame", game);
+    socket.on("startGame", (roomCode) => {
 
-    nextTurn();
-  });
+        const room = rooms[roomCode];
+        if (!room) return;
 
-  socket.on("buyProperty", () => {
-    const player = game.players[game.currentTurn];
-    if (!player || player.id !== socket.id) return;
+        if (socket.id !== room.host) return;
+        if (room.players.length < 2) return;
 
-    const pos = player.position;
+        room.started = true;
 
-    if (!game.properties[pos] && player.money >= 200) {
-      player.money -= 200;
-      player.properties.push(pos);
-      game.properties[pos] = player.id;
-      io.emit("updateGame", game);
-    }
-  });
+        io.to(roomCode).emit("gameStarted", room);
+    });
+
+    socket.on("rollDice", (roomCode) => {
+
+        const room = rooms[roomCode];
+        if (!room || !room.started) return;
+
+        const player = room.players[room.turn];
+
+        if (player.id !== socket.id) return;
+
+        if (player.skip > 0) {
+            player.skip--;
+            nextTurn(room, roomCode);
+            return;
+        }
+
+        const dice = Math.floor(Math.random() * 6) + 1;
+        player.position = (player.position + dice) % 24;
+
+        io.to(roomCode).emit("diceRolled", {
+            dice,
+            player: player.name,
+            players: room.players
+        });
+
+        nextTurn(room, roomCode);
+    });
+
+    socket.on("disconnect", () => {
+        for (const code in rooms) {
+            rooms[code].players =
+                rooms[code].players.filter(p => p.id !== socket.id);
+        }
+    });
+
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log("Server started on port " + PORT);
+function nextTurn(room, code) {
+    room.turn++;
+    if (room.turn >= room.players.length)
+        room.turn = 0;
+
+    io.to(code).emit("roomUpdate", room);
+}
+
+server.listen(3000, () => {
+    console.log("Server running");
 });
