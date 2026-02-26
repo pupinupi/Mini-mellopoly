@@ -1,33 +1,26 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Mini Monopoly</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Mellopoly</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Mini Monopoly</h1>
 
-  <div id="join">
-    <input id="name" placeholder="Ваше имя">
-    <input id="roomCode" placeholder="Код комнаты">
-    <select id="color">
-      <option value="red">Красный</option>
-      <option value="blue">Синий</option>
-      <option value="green">Зелёный</option>
-      <option value="yellow">Жёлтый</option>
-    </select>
-    <button onclick="joinRoom()">Войти</button>
-  </div>
+<div id="join">
+    <input id="name" placeholder="Имя">
+    <input id="room" placeholder="Код комнаты">
+    <button onclick="join()">Войти</button>
+</div>
 
-  <div id="game" style="display:none;">
-    <button onclick="startGame()">Начать игру</button>
-    <button onclick="rollDice()">Бросить кубик</button>
-  </div>
+<div id="game" style="display:none">
+    <button onclick="start()">Начать игру</button>
+    <button onclick="roll()">Бросить кубик</button>
+    <div id="board"></div>
+</div>
 
-  <div id="board"></div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
 </body>
 </html>
