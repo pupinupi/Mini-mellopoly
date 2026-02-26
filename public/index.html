@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini Monopoly</title>
+</head>
+<body>
+  <h1>Mini Monopoly</h1>
 
+  <div id="join">
+    <input id="name" placeholder="Ваше имя" />
+    <button onclick="join()">Войти</button>
+  </div>
+
+  <div id="game" style="display:none;">
+    <button onclick="start()">Начать игру</button>
+    <button onclick="roll()">Бросить кубик</button>
+    <button onclick="buy()">Купить клетку</button>
+    <pre id="state"></pre>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function join() {
+      const name = document.getElementById("name").value;
+      socket.emit("joinGame", name);
+      document.getElementById("join").style.display = "none";
+      document.getElementById("game").style.display = "block";
+    }
+
+    function start() {
+      socket.emit("startGame");
+    }
+
+    function roll() {
+      socket.emit("rollDice");
+    }
+
+    function buy() {
+      socket.emit("buyProperty");
+    }
+
+    socket.on("updateGame", (data) => {
+      document.getElementById("state").innerText =
+        JSON.stringify(data, null, 2);
+    });
+
+    socket.on("diceRolled", (data) => {
+      alert(data.player + " выбросил " + data.dice);
+    });
+  </script>
+</body>
+</html>
