@@ -1,26 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <title>Mellopoly</title>
+  <meta charset="UTF-8">
+  <title>Game</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Mini Mellopoly</h1>
+<div class="game-container">
 
-<div id="join">
-  <input id="name" placeholder="Имя">
-  <input id="room" placeholder="Комната">
-  <button onclick="join()">Войти</button>
+  <div class="top-panel">
+    <div class="currency">
+      <img src="Images/coin.png" class="icon">
+      <span id="money">1000</span>
+    </div>
+
+    <div class="luck">
+      <img src="Images/luck.png" class="icon">
+      <span id="luck-value">50%</span>
+    </div>
+  </div>
+
+  <div class="cards-section">
+    <h2>Карточки шансов</h2>
+
+    <div class="cards">
+
+      <div class="card">
+        <img src="Images/card1.png">
+        <button onclick="useCard(1)">Использовать</button>
+      </div>
+
+      <div class="card">
+        <img src="Images/card2.png">
+        <button onclick="useCard(2)">Использовать</button>
+      </div>
+
+      <div class="card">
+        <img src="Images/card3.png">
+        <button onclick="useCard(3)">Использовать</button>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
-<div id="game" style="display:none;">
-  <button onclick="start()">Начать игру</button>
-  <button onclick="roll()">Бросить кубик</button>
-  <div id="board"></div>
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
