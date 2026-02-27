@@ -1,8 +1,9 @@
+// Игроки с цветами фишек
 const players = [
-  {name:"Игрок 1", money:30000, position:0},
-  {name:"Игрок 2", money:30000, position:0},
-  {name:"Игрок 3", money:30000, position:0},
-  {name:"Игрок 4", money:30000, position:0}
+  {name:"Игрок 1", money:30000, position:0, color:"#ff4d4d"},
+  {name:"Игрок 2", money:30000, position:0, color:"#4dff4d"},
+  {name:"Игрок 3", money:30000, position:0, color:"#4d4dff"},
+  {name:"Игрок 4", money:30000, position:0, color:"#ffff4d"}
 ];
 
 let current = 0;
@@ -60,23 +61,19 @@ function renderBoard(){
   const board = document.getElementById("board");
   board.innerHTML = "";
 
-  const size = 9;
-  board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-  board.style.gridTemplateRows = `repeat(${size}, 95px)`;
+  const size=9;
+  board.style.gridTemplateColumns=`repeat(${size},1fr)`;
+  board.style.gridTemplateRows=`repeat(${size},95px)`;
 
   const total = size*size;
   const cells = new Array(total).fill(null);
 
   let i=0;
 
-  // Верх
-  for(let col=0; col<size; col++) cells[col] = boardData[i++] || null;
-  // Правая сторона вниз
+  for(let col=0; col<size; col++) cells[col]=boardData[i++] || null;
   for(let row=1; row<size; row++) cells[row*size + (size-1)] = boardData[i++] || null;
-  // Низ влево
-  for(let col=size-2; col>=0; col--) cells[(size-1)*size + col] = boardData[i++] || null;
-  // Левая сторона вверх
-  for(let row=size-2; row>0; row--) cells[row*size] = boardData[i++] || null;
+  for(let col=size-2; col>=0; col--) cells[(size-1)*size + col]=boardData[i++] || null;
+  for(let row=size-2; row>0; row--) cells[row*size]=boardData[i++] || null;
 
   // Центральная картинка (5x5)
   const center = document.createElement("div");
@@ -84,19 +81,27 @@ function renderBoard(){
   center.innerHTML=`<img src="/IMG_8941.jpeg">`;
   board.appendChild(center);
 
-  for(let n=0; n<total; n++){
-    // пропускаем центральные клетки
+  for(let n=0;n<total;n++){
     const row = Math.floor(n/size);
     const col = n%size;
     if(row>=2 && row<=6 && col>=2 && col<=6) continue;
 
-    const div = document.createElement("div");
+    const div=document.createElement("div");
     div.className="cell";
     const cell = cells[n];
-
     if(cell){
-      div.innerHTML = `<strong>${cell.name}</strong>`;
+      div.innerHTML=`<strong>${cell.name}</strong>`;
       if(cell.img) div.innerHTML+=`<img src="${cell.img}">`;
+
+      // Фишки игроков
+      players.forEach(p=>{
+        if(p.position===n){
+          const token=document.createElement("div");
+          token.className="playerToken";
+          token.style.background=p.color;
+          div.appendChild(token);
+        }
+      });
     }
     board.appendChild(div);
   }
@@ -104,24 +109,24 @@ function renderBoard(){
 
 function rollDice(){
   const roll = Math.floor(Math.random()*6)+1;
-  const player = players[current];
+  const player=players[current];
 
-  // Пропуск хода
   if(player.skipNext){
     player.skipNext=false;
     alert(player.name+" пропускает ход!");
     current=(current+1)%players.length;
     updateUI();
+    renderBoard();
     return;
   }
 
-  player.position += roll;
-  if(player.position >= boardData.length){
-    player.position -= boardData.length;
-    player.money += 5000;
+  player.position+=roll;
+  if(player.position>=boardData.length){
+    player.position-=boardData.length;
+    player.money+=5000;
   }
 
-  handleCell(boardData[player.position], player);
+  handleCell(boardData[player.position],player);
 
   if(player.money>=200000){
     alert(player.name+" победил!");
@@ -155,11 +160,11 @@ function handleCell(cell, player){
   }
   if(cell.type==="skip") player.skipNext=true;
   if(cell.type==="jail") player.inJail=true;
-  if(cell.type==="start") {player.position=0; player.money+=5000;}
+  if(cell.type==="start"){player.position=0; player.money+=5000;}
 }
 
 function startAuction(cell){
-  let highest=cell.price, winner=null;
+  let highest=cell.price,winner=null;
   players.forEach(p=>{
     const bid=parseInt(prompt(`${p.name}, ставка выше ${highest} или 0`));
     if(bid>highest && bid<=p.money){highest=bid; winner=p;}
