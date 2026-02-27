@@ -1,25 +1,41 @@
-.board{
-  margin-top:60px;
+.board {
+  display: grid;
+  grid-template-columns: repeat(9, 80px);
+  grid-template-rows: repeat(9, 80px);
+  gap: 4px;
+  justify-content: center;
+  margin-top: 60px;
 }
 
-.cell{
-  position:relative;
-  overflow:hidden;
+.cell {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.cell img{
-  width:100%;
-  height:55px;
-  object-fit:cover;
-  border-radius:6px;
+.cell img {
+  width: 100%;
+  height: 55px;
+  object-fit: cover;
 }
 
-.token{
-  width:15px;
-  height:15px;
-  border-radius:50%;
-  position:absolute;
-  bottom:3px;
-  right:3px;
-  border:2px solid white;
+.center {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.center img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.token {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  border: 2px solid white;
 }
