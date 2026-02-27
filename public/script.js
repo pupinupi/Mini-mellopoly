@@ -4,13 +4,12 @@ let current=0;
 const boardData=[
 "Старт","Minecraft 1500","Dota 2 2000","CS GO 2500","Удача","Москва 6000","Шанс","Mellberries 4000","Тюрьма",
 "Mellbeer 4500","Mellburger 5000","Гомель 6000","Удача","М-такси 5500","М-шеринг 6000","+2000",
-"Пропуск хода","YouTube 10000","Kick 15000","Удача","Кипр 6000","Шанс","Шаур-Mell 20000","Тюрьма",
-"Aм-ам-ам 25000","Удача","Шанс","Mellbank 30000","Mellcoin 35000","Mellstroy game 40000","Вернуться"
+"Пропуск хода","YouTube 10000","Kick 15000","Удача","Кипр 6000","Шанс","Shaur-Mell 20000","Тюрьма",
+"Am-Am-Am 25000","Удача","Шанс","Mellbank 30000","Mellcoin 35000","Mellstroy game 40000","Вернуться"
 ];
 
 function startGame(){
   const count=parseInt(document.getElementById("playerCount").value);
-
   players=[];
   for(let i=0;i<count;i++){
     players.push({
@@ -66,32 +65,8 @@ function rollDice(){
     player.money+=5000;
   }
 
-  handleCell(boardData[player.position],player);
-
   current=(current+1)%players.length;
   updateInfo();
-}
-
-function handleCell(cell,player){
-  if(cell.includes("Удача")||cell.includes("Шанс")){
-    showCard(cell,"Случайное событие!");
-  }
-  if(cell.includes("+2000")){
-    player.money+=2000;
-  }
-  if(cell==="Вернуться"){
-    player.position=0;
-  }
-}
-
-function showCard(title,text){
-  document.getElementById("cardTitle").innerText=title;
-  document.getElementById("cardText").innerText=text;
-  document.getElementById("cardModal").classList.remove("hidden");
-}
-
-function closeCard(){
-  document.getElementById("cardModal").classList.add("hidden");
 }
 
 function updateInfo(){
