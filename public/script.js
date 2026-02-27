@@ -22,27 +22,44 @@ const luckCards = [
 
 const boardData = [
   {name:"Старт"},
+
   {name:"Minecraft", price:1500, img:"/Minecraft.jpg"},
-  {name:"Dota2", price:2000, img:"/Dota2.jpg"},
-  {name:"CSGO", price:2500, img:"/CSGO.jpg"},
+  {name:"Dota 2", price:2000, img:"/Dota2.jpg"},
+  {name:"CS GO", price:2500, img:"/CSGO.jpg"},
   {name:"Удача", type:"luck", img:"/Luck.jpg"},
   {name:"Москва", price:6000, img:"/Moscow.jpg"},
   {name:"Шанс", type:"chance", img:"/Chance.jpg"},
   {name:"Mellberries", price:4000, img:"/Mellberries.jpg"},
+
   {name:"Тюрьма"},
+
   {name:"Mellbeer", price:4500, img:"/Mellbeer.jpg"},
   {name:"Mellburger", price:5000, img:"/Mellburger.jpg"},
   {name:"Гомель", price:6000, img:"/Gomel.jpg"},
+  {name:"Удача", type:"luck", img:"/Luck.jpg"},
   {name:"M-Taxi", price:5500, img:"/M-Taxi.jpg"},
   {name:"M-Sharing", price:6000, img:"/M-Sharing.jpg"},
+
+  {name:"+2000", type:"bonus", img:"/coin2000.jpg"},
+
+  {name:"Пропуск хода", type:"skip"},
   {name:"YouTube", price:10000, img:"/YouTube.jpg"},
   {name:"Kick", price:15000, img:"/Kick.jpg"},
+  {name:"Удача", type:"luck", img:"/Luck.jpg"},
   {name:"Кипр", price:6000, img:"/Kipr.jpg"},
+  {name:"Шанс", type:"chance", img:"/Chance.jpg"},
   {name:"Shaur-Mell", price:20000, img:"/ShaurMell.jpg"},
+
+  {name:"Тюрьма"},
+
   {name:"Am-Am-Am", price:25000, img:"/AmAmAm.jpg"},
+  {name:"Удача", type:"luck", img:"/Luck.jpg"},
+  {name:"Шанс", type:"chance", img:"/Chance.jpg"},
   {name:"Mellbank", price:30000, img:"/Mellbank.jpg"},
   {name:"Mellcoin", price:35000, img:"/Mellcoin.jpg"},
-  {name:"Mellstroy", price:40000, img:"/MellstroyGame.jpg"}
+  {name:"Mellstroy game", price:40000, img:"/MellstroyGame.jpg"},
+
+  {name:"Вернуться к старту", type:"start"}
 ];
 
 function log(text){
