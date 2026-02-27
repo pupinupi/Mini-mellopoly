@@ -1,34 +1,11 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<title>Mellstroy Game</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+<div id="game">
 
-<div id="lobby">
-  <h1>💰 MELLSTROY GAME 💰</h1>
-
-  <select id="playerCount">
-    <option value="2">2 игрока</option>
-    <option value="3">3 игрока</option>
-    <option value="4">4 игрока</option>
-  </select>
-
-  <button onclick="startGame()">Начать игру</button>
-</div>
-
-<div id="game" class="hidden">
-  <div id="info"></div>
-  <div id="board" class="board"></div>
-
-  <div class="dice-area">
-    <div id="dice">🎲</div>
-    <button onclick="rollDice()">Бросить</button>
+  <div id="topUI">
+    <button onclick="rollDice()">🎲 Бросить кубик</button>
+    <div id="dice">1</div>
+    <div id="info"></div>
   </div>
-</div>
 
-<script src="script.js"></script>
-</body>
-</html>
+  <div id="board"></div>
+
+</div>
