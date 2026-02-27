@@ -2,25 +2,53 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Mell Game</title>
+<title>Mellstroy Game</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="game">
+<div id="lobby" class="screen">
+  <h1>💰 MELLSTROY GAME 💰</h1>
 
-  <div class="top-bar">
+  <div class="players-setup">
+    <label>Количество игроков (2-4):</label>
+    <select id="playerCount">
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
+  </div>
+
+  <div id="playersConfig"></div>
+
+  <button onclick="startGame()">Начать игру</button>
+</div>
+
+<div id="game" class="screen hidden">
+
+  <div class="topbar">
     <div>Игрок: <span id="currentPlayer"></span></div>
     <div>Баланс: <span id="money"></span> ₽</div>
-    <button onclick="rollDice()">🎲 Бросить кубик</button>
+    <div>Компании: <span id="companies"></span></div>
   </div>
 
   <div id="board" class="board"></div>
 
-  <div id="log" class="log"></div>
+  <div class="dice-area">
+    <div id="dice" class="dice">🎲</div>
+    <button onclick="rollDice()">Бросить</button>
+  </div>
 
 </div>
 
-<script src="script.js"></script>
+<div id="cardModal" class="modal hidden">
+  <div class="card-window">
+    <h2 id="cardTitle"></h2>
+    <p id="cardText"></p>
+    <button onclick="closeCard()">Ок</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
 </body>
 </html>
