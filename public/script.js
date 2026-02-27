@@ -39,28 +39,66 @@ function startGame() {
 }
 
 // Рендерим поле 9x9 с центром
-function renderBoard() {
+function renderBoard(){
   const board = document.getElementById("board");
   board.innerHTML = "";
+
   const size = 9;
-  let index = 0;
+  board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  board.style.gridTemplateRows = `repeat(${size}, 1fr)`;
 
-  for (let r = 0; r < size; r++) {
-    for (let c = 0; c < size; c++) {
+  const total = size * size;
+  const grid = new Array(total).fill(null);
 
-      // Центральное изображение (IMG_8954.jpeg)
-      if (r >= 1 && r <= 7 && c >= 1 && c <= 7) {
-        if (r === 1 && c === 1) {
-          const center = document.createElement("div");
-          center.className = "center";
-          center.style.gridRow = "2 / span 6";
-          center.style.gridColumn = "2 / span 6";
-          center.innerHTML = `<img src="IMG_8954.jpeg">`;
-          board.appendChild(center);
-        }
-        continue;
+  let i = 0;
+
+  // Верх
+  for(let col=0; col<size; col++){
+    grid[col] = cells[i++] || null;
+  }
+
+  // Право
+  for(let row=1; row<size; row++){
+    grid[row*size + (size-1)] = cells[i++] || null;
+  }
+
+  // Низ
+  for(let col=size-2; col>=0; col--){
+    grid[(size-1)*size + col] = cells[i++] || null;
+  }
+
+  // Лево
+  for(let row=size-2; row>0; row--){
+    grid[row*size] = cells[i++] || null;
+  }
+
+  for(let n=0; n<total; n++){
+    const div = document.createElement("div");
+    div.className = "cell";
+
+    const imgName = grid[n];
+    if(imgName){
+      div.innerHTML = `<img src="${imgName}">`;
+    }
+
+    players.forEach(p=>{
+      if(p.position === n){
+        const token = document.createElement("div");
+        token.className="token";
+        token.style.background=p.color;
+        div.appendChild(token);
       }
+    });
 
+    board.appendChild(div);
+  }
+
+  // Центр
+  const center = document.createElement("div");
+  center.className="center";
+  center.innerHTML=`<img src="IMG_8954.jpeg">`;
+  board.appendChild(center);
+}
       // Обычная клетка
       const cell = document.createElement("div");
       cell.className = "cell";
