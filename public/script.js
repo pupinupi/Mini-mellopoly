@@ -1,24 +1,15 @@
-const players = [
-  {name:"Игрок 1", money:30000, position:0, properties:[]},
-  {name:"Игрок 2", money:30000, position:0, properties:[]},
-  {name:"Игрок 3", money:30000, position:0, properties:[]},
-  {name:"Игрок 4", money:30000, position:0, properties:[]}
-];
+const count = parseInt(prompt("Сколько игроков? (2-5)"));
+const players = [];
+
+for(let i=1;i<=count;i++){
+  players.push({
+    name:"Игрок "+i,
+    money:30000,
+    position:0
+  });
+}
 
 let current = 0;
-
-const chanceCards = [
-  {text:"Получите 1000₽", action:(p)=>p.money+=1000},
-  {text:"Получите 2000₽", action:(p)=>p.money+=2000},
-  {text:"Заплатите 2000₽", action:(p)=>p.money=Math.max(0,p.money-2000)},
-  {text:"Пройдите на старт +5000₽", action:(p)=>{p.position=0;p.money+=5000}}
-];
-
-const luckCards = [
-  {text:"Наследство 10000₽", action:(p)=>p.money+=10000},
-  {text:"День рождения +1500₽", action:(p)=>p.money+=1500},
-  {text:"Получите 2000₽", action:(p)=>p.money+=2000}
-];
 
 const boardData = [
   {name:"Старт"},
@@ -39,7 +30,6 @@ const boardData = [
   {name:"Удача", type:"luck", img:"/Luck.jpg"},
   {name:"M-Taxi", price:5500, img:"/M-Taxi.jpg"},
   {name:"M-Sharing", price:6000, img:"/M-Sharing.jpg"},
-
   {name:"+2000", type:"bonus", img:"/coin2000.jpg"},
 
   {name:"Пропуск хода", type:"skip"},
@@ -62,50 +52,56 @@ const boardData = [
   {name:"Вернуться к старту", type:"start"}
 ];
 
-function log(text){
-  document.getElementById("log").innerHTML = text;
-}
+const chanceCards = [
+  {text:"Получите 2000₽", action:p=>p.money+=2000},
+  {text:"Заплатите 3000₽", action:p=>p.money=Math.max(0,p.money-3000)},
+  {text:"Вернитесь на старт +5000₽", action:p=>{p.position=0;p.money+=5000}}
+];
+
+const luckCards = [
+  {text:"Наследство 10000₽", action:p=>p.money+=10000},
+  {text:"Получите 2000₽", action:p=>p.money+=2000}
+];
 
 function renderBoard(){
   const board = document.getElementById("board");
   board.innerHTML = "";
 
-  const perimeter = [];
+  const size = 9;
+  board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+  board.style.gridTemplateRows = `repeat(${size}, 95px)`;
 
-  const size = 8;
-  const totalCells = size*size;
+  const total = size*size;
+  const cells = new Array(total).fill(null);
 
-  for(let i=0;i<totalCells;i++){
-    perimeter.push(null);
+  let i = 0;
+
+  for(let col=0; col<size; col++){
+    cells[col] = boardData[i++] || null;
   }
 
-  let index=0;
+  for(let row=1; row<size; row++){
+    cells[row*size + (size-1)] = boardData[i++] || null;
+  }
 
-  // верх
-  for(let i=0;i<size;i++) perimeter[i]=boardData[index++] || null;
-  // право
-  for(let i=1;i<size;i++) perimeter[i*size + (size-1)] = boardData[index++] || null;
-  // низ
-  for(let i=size-2;i>=0;i--) perimeter[(size-1)*size + i] = boardData[index++] || null;
-  // лево
-  for(let i=size-2;i>0;i--) perimeter[i*size] = boardData[index++] || null;
+  for(let col=size-2; col>=0; col--){
+    cells[(size-1)*size + col] = boardData[i++] || null;
+  }
 
-  for(let i=0;i<totalCells;i++){
+  for(let row=size-2; row>0; row--){
+    cells[row*size] = boardData[i++] || null;
+  }
+
+  for(let n=0; n<total; n++){
     const div = document.createElement("div");
     div.className="cell";
-
-    const cell = perimeter[i];
+    const cell = cells[n];
 
     if(cell){
       div.innerHTML = `<strong>${cell.name}</strong>`;
       if(cell.img){
         div.innerHTML += `<img src="${cell.img}">`;
       }
-      players.forEach((p,pi)=>{
-        if(p.position===boardData.indexOf(cell)){
-          div.innerHTML+=`<div class="player-token">🎲${pi+1}</div>`;
-        }
-      });
     }
 
     board.appendChild(div);
@@ -117,13 +113,18 @@ function rollDice(){
   const player = players[current];
 
   player.position += roll;
+
   if(player.position >= boardData.length){
     player.position -= boardData.length;
     player.money += 5000;
   }
 
   handleCell(boardData[player.position], player);
-  checkWin(player);
+
+  if(player.money >= 200000){
+    alert(player.name + " победил!");
+  }
+
   current = (current+1)%players.length;
   updateUI();
   renderBoard();
@@ -131,32 +132,36 @@ function rollDice(){
 
 function handleCell(cell, player){
 
-  if(cell.price){
-    if(!cell.owner){
-      if(confirm(`Купить ${cell.name} за ${cell.price}?`)){
-        if(player.money>=cell.price){
-          player.money-=cell.price;
-          cell.owner=player.name;
-          player.properties.push(cell);
-        }
-      } else {
-        startAuction(cell);
+  if(cell.price && !cell.owner){
+    if(confirm(`Купить ${cell.name} за ${cell.price}?`)){
+      if(player.money >= cell.price){
+        player.money -= cell.price;
+        cell.owner = player.name;
       }
     } else {
-      log("Компания уже куплена");
+      startAuction(cell);
     }
+  }
+
+  if(cell.type==="bonus"){
+    player.money += 2000;
   }
 
   if(cell.type==="chance"){
     const card = chanceCards[Math.floor(Math.random()*chanceCards.length)];
-    log("Шанс: "+card.text);
+    document.getElementById("log").innerText = "Шанс: "+card.text;
     card.action(player);
   }
 
   if(cell.type==="luck"){
     const card = luckCards[Math.floor(Math.random()*luckCards.length)];
-    log("Удача: "+card.text);
+    document.getElementById("log").innerText = "Удача: "+card.text;
     card.action(player);
+  }
+
+  if(cell.type==="start"){
+    player.position=0;
+    player.money+=5000;
   }
 }
 
@@ -165,7 +170,7 @@ function startAuction(cell){
   let winner = null;
 
   players.forEach(p=>{
-    const bid = prompt(`${p.name}, ставка выше ${highest} или 0 чтобы отказаться`);
+    const bid = prompt(`${p.name}, ставка выше ${highest} или 0`);
     const num = parseInt(bid);
     if(num>highest && num<=p.money){
       highest=num;
@@ -176,16 +181,6 @@ function startAuction(cell){
   if(winner){
     winner.money-=highest;
     cell.owner=winner.name;
-    winner.properties.push(cell);
-    log(`${winner.name} выиграл аукцион за ${highest}`);
-  } else {
-    log("Аукцион без ставок");
-  }
-}
-
-function checkWin(player){
-  if(player.money>=200000){
-    alert(player.name+" победил!");
   }
 }
 
