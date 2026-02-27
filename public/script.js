@@ -1,21 +1,29 @@
 let players=[];
 let current=0;
 
-const boardData=[
-"Старт","Minecraft 1500","Dota 2 2000","CS GO 2500","Удача","Москва 6000","Шанс","Mellberries 4000","Тюрьма",
-"Mellbeer 4500","Mellburger 5000","Гомель 6000","Удача","М-такси 5500","М-шеринг 6000","+2000",
-"Пропуск хода","YouTube 10000","Kick 15000","Удача","Кипр 6000","Шанс","Shaur-Mell 20000","Тюрьма",
-"Am-Am-Am 25000","Удача","Шанс","Mellbank 30000","Mellcoin 35000","Mellstroy game 40000","Вернуться"
+const cellImages=[
+"Start.jpg","Minecraft.jpg","Dota2.jpg","CSGO.jpg","Luck.jpg",
+"Moscow.jpg","Chance.jpg","Mellberries.jpg","TM.jpg",
+"Mellbeer.jpg","Mellburger.jpg","Gomel.jpg","Luck.jpg",
+"M-Taxi.jpg","M-Sharing.jpg","coin2000.jpg",
+"Skip.jpg","YouTube.jpg","Kick.jpg","Luck.jpg",
+"Kipr.jpg","Chance.jpg","ShaurMell.jpg","TM.jpg",
+"AmAmAm.jpg","Luck.jpg","Chance.jpg","Mellbank.jpg",
+"Mellcoin.jpg","MellstroyGame.jpg","Skip.jpg"
 ];
 
 function startGame(){
   const count=parseInt(document.getElementById("playerCount").value);
+
+  const colors=["red","blue","lime","yellow"];
+
   players=[];
   for(let i=0;i<count;i++){
     players.push({
       name:"Игрок "+(i+1),
       money:30000,
-      position:0
+      position:0,
+      color:colors[i]
     });
   }
 
@@ -34,6 +42,7 @@ function renderBoard(){
   for(let r=0;r<9;r++){
     for(let c=0;c<9;c++){
 
+      // центр
       if(r>=1 && r<=7 && c>=1 && c<=7){
         if(r===1 && c===1){
           const center=document.createElement("div");
@@ -46,7 +55,21 @@ function renderBoard(){
 
       const cell=document.createElement("div");
       cell.className="cell";
-      cell.innerText=boardData[index]||"";
+
+      if(cellImages[index]){
+        cell.innerHTML=`<img src="${cellImages[index]}">`;
+      }
+
+      // фишки игроков
+      players.forEach(p=>{
+        if(p.position===index){
+          const token=document.createElement("div");
+          token.className="token";
+          token.style.background=p.color;
+          cell.appendChild(token);
+        }
+      });
+
       board.appendChild(cell);
       index++;
     }
@@ -60,12 +83,14 @@ function rollDice(){
   const player=players[current];
   player.position+=roll;
 
-  if(player.position>=boardData.length){
+  if(player.position>=cellImages.length){
     player.position=0;
     player.money+=5000;
   }
 
   current=(current+1)%players.length;
+
+  renderBoard();
   updateInfo();
 }
 
