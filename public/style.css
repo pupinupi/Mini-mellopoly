@@ -1,84 +1,82 @@
 body{
   margin:0;
-  background:#1e1e2f;
   font-family:Arial;
+  background:linear-gradient(135deg,#1c1c2e,#0f0f1f);
   color:white;
 }
 
-.game{
-  padding:10px;
-}
+.hidden{ display:none; }
 
-.top-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#2a2a40;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
+.screen{
+  padding:20px;
+  text-align:center;
 }
 
 .board{
   display:grid;
+  grid-template-columns:repeat(9,1fr);
+  grid-template-rows:repeat(9,90px);
   gap:4px;
-  max-width:720px;
-  margin:0 auto;
-  position:relative;
+  max-width:800px;
+  margin:20px auto;
 }
 
 .cell{
-  background:#2a2a40;
+  background:#2b2b45;
   border-radius:8px;
   font-size:10px;
-  text-align:center;
   padding:4px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  position:relative;
 }
 
 .cell img{
   width:100%;
-  height:75px;
+  height:60px;
   object-fit:cover;
-  object-position:top;
-  border-radius:6px;
-  margin-top:4px;
 }
 
 .center{
   grid-column:2 / span 7;
   grid-row:2 / span 7;
-  background:#1e1e2f;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  border-radius:12px;
+  overflow:hidden;
+  border-radius:15px;
 }
 
 .center img{
   width:100%;
   height:100%;
-  object-fit:contain;
+  object-fit:cover;
 }
 
-.playerToken{
-  width:16px;
-  height:16px;
-  border-radius:50%;
-  position:absolute;
-  bottom:2px;
-  left:2px;
-  border:1px solid #fff;
-}
-
-.log{
-  margin-top:15px;
-  background:#111;
+.topbar{
+  display:flex;
+  justify-content:space-around;
+  background:#22223a;
   padding:10px;
   border-radius:10px;
-  min-height:60px;
-  font-size:12px;
+}
+
+.dice-area{
+  margin-top:15px;
+}
+
+.dice{
+  font-size:50px;
+  transition:0.5s;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.card-window{
+  background:#fff;
+  color:#000;
+  padding:30px;
+  border-radius:15px;
+  width:300px;
 }
