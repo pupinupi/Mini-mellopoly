@@ -1,7 +1,7 @@
 let players=[];
 let current=0;
 
-const cellImages=[
+const cells=[
 "Start.jpg","Minecraft.jpg","Dota2.jpg","CSGO.jpg","Luck.jpg",
 "Moscow.jpg","Chance.jpg","Mellberries.jpg","TM.jpg",
 "Mellbeer.jpg","Mellburger.jpg","Gomel.jpg","Luck.jpg",
@@ -14,7 +14,6 @@ const cellImages=[
 
 function startGame(){
   const count=parseInt(document.getElementById("playerCount").value);
-
   const colors=["red","blue","lime","yellow"];
 
   players=[];
@@ -31,7 +30,6 @@ function startGame(){
   document.getElementById("game").classList.remove("hidden");
 
   renderBoard();
-  updateInfo();
 }
 
 function renderBoard(){
@@ -47,7 +45,7 @@ function renderBoard(){
         if(r===1 && c===1){
           const center=document.createElement("div");
           center.className="center";
-          center.innerHTML=`<img src="center.jpg">`;
+          center.innerHTML=`<img src="IMG_8954.jpeg">`;
           board.appendChild(center);
         }
         continue;
@@ -56,11 +54,13 @@ function renderBoard(){
       const cell=document.createElement("div");
       cell.className="cell";
 
-      if(cellImages[index]){
-        cell.innerHTML=`<img src="${cellImages[index]}">`;
+      const imgName=cells[index];
+
+      if(imgName){
+        cell.innerHTML=`<img src="${imgName}" onerror="this.style.background='red'">`;
       }
 
-      // фишки игроков
+      // фишки
       players.forEach(p=>{
         if(p.position===index){
           const token=document.createElement("div");
@@ -83,19 +83,11 @@ function rollDice(){
   const player=players[current];
   player.position+=roll;
 
-  if(player.position>=cellImages.length){
+  if(player.position>=cells.length){
     player.position=0;
     player.money+=5000;
   }
 
   current=(current+1)%players.length;
-
   renderBoard();
-  updateInfo();
-}
-
-function updateInfo(){
-  const p=players[current];
-  document.getElementById("info").innerText=
-  p.name+" | Деньги: "+p.money;
 }
