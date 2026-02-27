@@ -1,41 +1,51 @@
-.board {
-  display: grid;
-  grid-template-columns: repeat(9, 80px);
-  grid-template-rows: repeat(9, 80px);
-  gap: 4px;
-  justify-content: center;
-  margin-top: 60px;
+body{
+  background:#111;
+  color:white;
+  font-family:Arial;
+  text-align:center;
 }
 
-.cell {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
+#board{
+  margin:30px auto;
+  display:grid;
+  width:720px;
+  height:720px;
+  position:relative;
 }
 
-.cell img {
-  width: 100%;
-  height: 55px;
-  object-fit: cover;
+.cell{
+  border:1px solid #444;
+  position:relative;
+  overflow:hidden;
 }
 
-.center {
-  overflow: hidden;
-  border-radius: 12px;
+.cell img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-.center img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.center{
+  position:absolute;
+  width:480px;
+  height:480px;
+  top:120px;
+  left:120px;
+  z-index:1;
 }
 
-.token {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-  border: 2px solid white;
+.center img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.token{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  position:absolute;
+  bottom:3px;
+  right:3px;
+  border:2px solid white;
 }
