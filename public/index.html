@@ -1,11 +1,32 @@
-<div id="game">
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>MELL MONOPOLY</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-  <div id="topUI">
-    <button onclick="rollDice()">🎲 Бросить кубик</button>
-    <div id="dice">1</div>
-    <div id="info"></div>
+<div id="lobby">
+  <h1>💰 MELL MONOPOLY 💰</h1>
+  <div id="playersSetup"></div>
+  <button onclick="addPlayer()">+ Игрок</button>
+  <button onclick="startGame()">Начать игру</button>
+</div>
+
+<div id="game" style="display:none;">
+
+  <div id="topPanel">
+    <div id="playersInfo"></div>
+    <div id="dice3d" onclick="rollDice()">🎲</div>
   </div>
 
   <div id="board"></div>
 
 </div>
+
+<div id="cardPopup" class="popup"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
