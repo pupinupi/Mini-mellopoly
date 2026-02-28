@@ -66,36 +66,72 @@ function startGame(){
   updatePlayersInfo();
 }
 
-function renderBoard(){
-  const board=document.getElementById("board");
-  board.innerHTML="";
+function renderBoard() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
 
-  const cells=new Array(81).fill(null);
-  let i=0;
-  const size=9;
+  const size = 9;
+  const total = size * size;
 
-  for(let col=0;col<9;col++) cells[col]=boardData[i++]||null;
-  for(let row=1;row<9;row++) cells[row*9+8]=boardData[i++]||null;
-  for(let col=7;col>=0;col--) cells[72+col]=boardData[i++]||null;
-  for(let row=7;row>0;row--) cells[row*9]=boardData[i++]||null;
+  board.style.display = "grid";
+  board.style.gridTemplateColumns = "repeat(9, 1fr)";
+  board.style.gridTemplateRows = "repeat(9, 1fr)";
 
-  for(let n=0;n<81;n++){
-    const div=document.createElement("div");
-    div.className="cell";
+  // создаём пустой массив 81 клетка
+  const grid = new Array(total).fill(null);
 
-    if(n===10){
-      div.id="center";
-      board.appendChild(div);
+  let i = 0;
+
+  // ВЕРХ
+  for (let col = 0; col < 9; col++) {
+    grid[col] = boardData[i++] || null;
+  }
+
+  // ПРАВО
+  for (let row = 1; row < 9; row++) {
+    grid[row * 9 + 8] = boardData[i++] || null;
+  }
+
+  // НИЗ
+  for (let col = 7; col >= 0; col--) {
+    grid[72 + col] = boardData[i++] || null;
+  }
+
+  // ЛЕВО
+  for (let row = 7; row > 0; row--) {
+    grid[row * 9] = boardData[i++] || null;
+  }
+
+  // Рисуем поле
+  for (let n = 0; n < total; n++) {
+
+    const cell = document.createElement("div");
+    cell.className = "cell";
+
+    // центр 7x7
+    const row = Math.floor(n / 9);
+    const col = n % 9;
+
+    if (row > 0 && row < 8 && col > 0 && col < 8) {
+      if (row === 1 && col === 1) {
+        const center = document.createElement("div");
+        center.id = "center";
+        center.style.gridColumn = "2 / span 7";
+        center.style.gridRow = "2 / span 7";
+        board.appendChild(center);
+      }
       continue;
     }
 
-    if(cells[n]){
-      div.innerHTML=`<img src="${cells[n]}">`;
+    if (grid[n]) {
+      cell.innerHTML = `<img src="${grid[n]}">`;
     }
 
-    board.appendChild(div);
+    board.appendChild(cell);
   }
 
+  renderTokens();
+}
   renderTokens();
 }
 
