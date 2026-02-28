@@ -9,23 +9,22 @@
 
 <div id="lobby">
   <h1>💰 MELL MONOPOLY 💰</h1>
-  <div id="playersSetup"></div>
-  <button onclick="addPlayer()">+ Игрок</button>
+
+  <div id="playersList"></div>
+
+  <button onclick="addPlayer()">Добавить игрока</button>
   <button onclick="startGame()">Начать игру</button>
 </div>
 
 <div id="game" style="display:none;">
-
   <div id="topPanel">
     <div id="playersInfo"></div>
-    <div id="dice3d" onclick="rollDice()">🎲</div>
+    <div id="dice" onclick="rollDice()">🎲</div>
   </div>
-
   <div id="board"></div>
-
 </div>
 
-<div id="cardPopup" class="popup"></div>
+<div id="popup" class="popup"></div>
 
 <script src="script.js"></script>
 </body>
